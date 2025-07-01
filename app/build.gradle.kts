@@ -43,7 +43,7 @@ android {
             pickFirsts.add("lib/armeabi-v7a/libc++_shared.so")
             pickFirsts.add("lib/arm64-v8a/libc++_shared.so")
 
-            //excludes += "/lib/armeabi-v7a/*"
+            //excludes += "/lib/armeabi-v7a/*"      //exclude 32bit arm and leave arm64 bit only when uncommented
             excludes += "/lib/x64/*"
             excludes += "/lib/x86_64/*"
         }

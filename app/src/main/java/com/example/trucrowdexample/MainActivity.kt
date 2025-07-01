@@ -1,6 +1,5 @@
 package com.example.trucrowdexample
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -30,16 +29,21 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
     override fun onTruCrowdInit(api: TruCrowdApiV1){
         trucrowd = api
 
+        //Examples of calling trucrowd functions
         if(trucrowd != null) {
-            if (!trucrowd!!.idRegistered()) {
-                trucrowd?.registerDevice("jvhjvbqJvFsbVf4oew")
+            if (!trucrowd!!.isRegistered()) {
+                trucrowd?.registerDevice("jvhjvbqJvFsbVf4oew", { connected: Boolean, error: String? -> {
+                    if(!connected) Toast.makeText(this,
+                    "Not Connected with Error: $error",
+                    Toast.LENGTH_SHORT
+                ).show()}})
             }
             Toast.makeText(
                 this,
                 "TruCrowd API version: ${trucrowd!!.getVersion()}",
                 Toast.LENGTH_LONG
             ).show()
-            trucrowd!!.setBanner(0, assets.open("topbanner.png"))
+            trucrowd!!.setBanner(TruCrowdApiV1.BannerType.TOP, assets.open("topbanner.png"))
         }
     }
 
