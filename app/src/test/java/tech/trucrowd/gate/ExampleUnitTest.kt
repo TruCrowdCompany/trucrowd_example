@@ -1,4 +1,4 @@
-package com.example.trucrowdexample
+package com.example.gate
 
 import org.junit.Test
 

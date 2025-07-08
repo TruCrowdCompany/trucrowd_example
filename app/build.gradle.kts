@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.trucrowdexample"
+    namespace = "tech.trucrowd.gate"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.trucrowdexample"
+        applicationId = "tech.trucrowd.gateLibExample"
         minSdk = 26
         targetSdk = 33
         versionCode = 1
