@@ -4,8 +4,10 @@ import android.content.ContentValues.TAG
 import android.content.res.AssetManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.innovatrics.smartface.embedded.toolkit.face.Template
 import tech.trucrowd.gateCore.OfflineMode
@@ -27,11 +29,7 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
         setContentView(R.layout.activity_main)
 
         setTruCrowdCallbacksV1(this)
-
-        val btnStart = findViewById<View>(R.id.buttonStart) as Button
-        btnStart.setOnClickListener {
-            startTruCrowdV1(this)
-        }
+        startTruCrowdV1(this, R.id.fragment_container_view)
     }
 
     override fun onTruCrowdInit(api: TruCrowdApiV1){
@@ -79,6 +77,25 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
         trucrowd = null
     }
 
+    override fun onTruCrowdScreen(screen: TruCrowdApiV1.ScreenType) {
+        val banner  = findViewById<ViewGroup>(R.id.banner)
+        val result  = findViewById<ViewGroup>(R.id.result)
+        when (screen) {
+            TruCrowdApiV1.ScreenType.BANNER -> {
+                banner.visibility = VISIBLE
+                result.visibility = INVISIBLE
+            }
+            TruCrowdApiV1.ScreenType.SINGLERESULT -> {
+                banner.visibility = INVISIBLE
+                result.visibility = VISIBLE
+            }
+            else -> {
+                banner.visibility = INVISIBLE
+                result.visibility = INVISIBLE
+            }
+        }
+    }
+
     override fun onTruCrowdFan(qrcode: Boolean, id: Int, customId: String, access: Boolean): Bundle {
         val ret = Bundle()
         val messageTop: String = if(qrcode) customId else id.toString()
@@ -96,6 +113,10 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
         ret.putString("messageRest", messageRest)
         ret.putString("messageDetail", messageDetail)
         ret.putBoolean("allow", allow)
+
+        runOnUiThread {
+            findViewById<TextView>(R.id.text_result).text = if (qrcode) "QR Code:\n $customId" else "Person:\n $id \n $customId"
+        }
 
         return ret
     }
