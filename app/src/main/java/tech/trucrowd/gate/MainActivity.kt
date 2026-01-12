@@ -37,39 +37,46 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
 
         //Examples of calling trucrowd functions
         if(trucrowd != null) {
-            //example how to register device after install as an alternative to qrcode scanning
-            /*if (!trucrowd!!.isRegistered()) {
-                trucrowd?.registerDevice(
-                    "jvhjvbqJvFsbVf4oew",
+
+            //register device after install as an alternative to qrcode scanning
+            if (!trucrowd!!.isRegistered()) {
+
+                //register with code from RestApi
+                /*trucrowd!!.registerDevice("xxcodexx")
                     { connected: Boolean, error: String? ->
-                        {
-                            if (!connected)
-                                Log.e(TAG, "Not Connected with Error: $error.")
-                        }
-                    })
-            }*/
+                        if (!connected)
+                            Log.e(TAG, "Not Registered with Error: $error")
+                    }*/
+
+                //register automatically
+                /*trucrowd!!.registerDevice(cid, sec, "", "desc", "https://trucrowd.tech/api/v1/access/testControl/puchov.png", "https://trucrowd.tech/api/v1/access/testControl/testControl.php")
+                    { connected: Boolean, error: String? ->
+                        if (!connected)
+                            Log.e(TAG, "Not Registered with Error: $error")
+                    }*/
+            }
 
             //get TruCrowd api version, should be 1
-            val version = trucrowd!!.getVersion()
-            Log.d(TAG, "TruCrowd API version: $version.")
+            //val version = trucrowd!!.getVersion()
+            //Log.d(TAG, "TruCrowd API version: $version.")
 
             //set top banner to an image from assets
-            trucrowd!!.setBanner(TruCrowdApiV1.BannerType.TOP, assets.open("topbanner.png"))
+            //trucrowd!!.setBanner(TruCrowdApiV1.BannerType.TOP, assets.open("topbanner.png"))
 
             //set to use onTruCrowdFan callback instead of server script
-            trucrowd!!.setUseFanCallback(true)
+            //trucrowd!!.setUseFanCallback(true)
 
             //generate offline file from csv and pics in assets folder
             //use device explorer to get offline file from /data/data/tech.trucrowd.gateLibExample/files/offlineGenerated.tmp
-            val result = generateOfflineFile(filesDir, assets)
-            if (result != "SUCCESS")
-                Log.e(TAG, result)
+            //val result = generateOfflineFile(filesDir, assets)
+            //if (result != "SUCCESS")
+            //    Log.e(TAG, result)
 
             //loads offline file from assets folder
-            trucrowd!!.setOfflineFile(assets.open("offlineGenerated.tmp"))
+            //trucrowd!!.setOfflineFile(assets.open("offlineGenerated.tmp"))
 
             //sets offline mode to COMBINED to search in the offline file first and if not found online on the server
-            trucrowd!!.setOfflineMode(OfflineMode.COMBINED)
+            //trucrowd!!.setOfflineMode(OfflineMode.COMBINED)
         }
     }
 
@@ -78,6 +85,10 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
     }
 
     override fun onTruCrowdScreen(screen: TruCrowdApiV1.ScreenType) {
+    }
+
+    //change screen if nobody is in front of the device
+    /*override fun onTruCrowdScreen(screen: TruCrowdApiV1.ScreenType) {
         val banner  = findViewById<ViewGroup>(R.id.banner)
         val result  = findViewById<ViewGroup>(R.id.result)
         when (screen) {
@@ -94,17 +105,22 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
                 result.visibility = INVISIBLE
             }
         }
-    }
+    }*/
 
     override fun onTruCrowdFan(qrcode: Boolean, id: Int, customId: String, access: Boolean): Bundle {
+        return Bundle()
+    }
+
+    //with trucrowd!!.setUseFanCallback(true) use to handle detected fans within library instead of a server script
+    /*override fun onTruCrowdFan(qrcode: Boolean, id: Int, customId: String, access: Boolean): Bundle {
         val ret = Bundle()
-        val messageTop: String = if(qrcode) customId else id.toString()
-        val messageBottomBig: String = "messageBottomBig"
-        val messageBottomSmall: String = "messageBottomSmall"
-        val messageMain: String = messageTop
-        val messageRest: String = "messageRest"
-        val messageDetail: String = "messageDetail"
-        val allow: Boolean = qrcode
+        val messageTop = if(qrcode) customId else id.toString()
+        val messageBottomBig = "messageBottomBig"
+        val messageBottomSmall = "messageBottomSmall"
+        val messageMain = messageTop
+        val messageRest = "messageRest"
+        val messageDetail = "messageDetail"
+        val allow = qrcode
 
         ret.putString("messageTop", messageTop)
         ret.putString("messageBottomBig", messageBottomBig)
@@ -119,7 +135,7 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
         }
 
         return ret
-    }
+    }*/
 
     fun generateOfflineFile(filesDir: File, assets: AssetManager) : String {
         val sfeOfflineDataVersion = 1
@@ -138,7 +154,7 @@ class MainActivity : AppCompatActivity(), TruCrowdCallbacksV1 {
             val lstCustomIds = ArrayList<String>()
             val lstTemplates = ArrayList<Template>()
 
-            val file = assets.open(fileNameIn);
+            val file = assets.open(fileNameIn)
             val reader = BufferedReader(file.bufferedReader(Charsets.UTF_8))
             var line: String?
             var count = 0
